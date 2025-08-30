@@ -26,7 +26,7 @@ export default function LoginForm() {
       } else {
         router.push('/dashboard')
       }
-    } catch (err) {
+        } catch {
       setError('حدث خطأ غير متوقع')
     }
     

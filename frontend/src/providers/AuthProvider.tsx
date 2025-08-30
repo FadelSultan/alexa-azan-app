@@ -4,11 +4,16 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@supabase/auth-helpers-nextjs'
 import { supabase } from '@/lib/supabase'
 
+interface AuthResponse {
+  data: unknown
+  error: Error | null
+}
+
 interface AuthContextType {
   user: User | null
   loading: boolean
-  signUp: (email: string, password: string, fullName: string) => Promise<any>
-  signIn: (email: string, password: string) => Promise<any>
+  signUp: (email: string, password: string, fullName: string) => Promise<AuthResponse>
+  signIn: (email: string, password: string) => Promise<AuthResponse>
   signOut: () => Promise<void>
 }
 
@@ -30,13 +35,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const getUser = async () => {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser()
+        const { data: { user } } = await supabase.auth.getUser()
         if (!isCancelled) {
           setUser(user)
           setLoading(false)
         }
-      } catch (error) {
-        console.error('Error getting user:', error)
+      } catch {
         if (!isCancelled) {
           setLoading(false)
         }
@@ -60,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [mounted])
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (email: string, password: string, fullName: string): Promise<AuthResponse> => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -73,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { data, error }
   }
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<AuthResponse> => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,

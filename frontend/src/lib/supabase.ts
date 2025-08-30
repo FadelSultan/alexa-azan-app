@@ -17,7 +17,7 @@ export interface User {
   email: string
   full_name: string | null
   timezone: string
-  location: any
+  location: Record<string, unknown> | null
   alexa_user_id: string | null
   created_at: string
   updated_at: string

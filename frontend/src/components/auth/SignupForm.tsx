@@ -22,18 +22,17 @@ export default function SignupForm() {
     setMessage('')
 
     try {
-      const { data, error } = await signUp(email, password, fullName)
+      const { error } = await signUp(email, password, fullName)
       
       if (error) {
         setError(error.message)
       } else {
         setMessage('تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني.')
-        // انتظار قليل ثم توجيه للدخول
         setTimeout(() => {
           router.push('/login')
         }, 3000)
       }
-    } catch (err) {
+    } catch {
       setError('حدث خطأ غير متوقع')
     }
     
